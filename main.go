@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 
 	"net/http"
 )
@@ -40,7 +41,13 @@ func main() {
 			w.Write([]byte(tmplUpload))
 		}
 	})
-	log.Println("Listing at", *flagListen)
+	if strings.HasPrefix(*flagListen, ":") {
+		for _, ip := range localIP() {
+			log.Println("Listening at", ip.String()+*flagListen)
+		}
+	} else {
+		log.Println("Listening at", *flagListen)
+	}
 	panic(http.ListenAndServe(*flagListen, nil))
 }
 
