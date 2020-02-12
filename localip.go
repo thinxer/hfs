@@ -19,9 +19,10 @@ func localIP() (ips []net.IP) {
 		}
 		for _, a := range addrs {
 			if ip, ok := a.(*net.IPNet); ok {
-				if ipv4 := ip.IP.To4(); ipv4 != nil {
-					ips = append(ips, ipv4)
+				if !ip.IP.IsGlobalUnicast() {
+					continue
 				}
+				ips = append(ips, ip.IP)
 			}
 		}
 	}
